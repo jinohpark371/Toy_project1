@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -22,13 +24,14 @@ public class ClothingItem {
     private String imageUrl;
 
 
-    @ManyToMany
+    // List보다 중복 방지되는 Set 권장
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "clothing_item_tag",    // 중간 테이블 이름
-            joinColumns = @JoinColumn(name = "clothing_item_id"), //현재 엔티티의 기본키
-            inverseJoinColumns = @JoinColumn(name = "tag_id")  //반대편 엔티티의 기본기
+            name = "clothing_item_tag",
+            joinColumns = @JoinColumn(name = "clothing_item_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<Tag> tags = new ArrayList<>();
+    private Set<Tag> tags = new HashSet<>();
 
     private double rating;
     private int rarityPercent;
