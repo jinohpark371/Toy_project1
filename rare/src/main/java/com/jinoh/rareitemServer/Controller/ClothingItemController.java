@@ -1,6 +1,7 @@
 package com.jinoh.rareitemServer.Controller;
 
 import com.jinoh.rareitemServer.Service.ClothingItemService;
+import com.jinoh.rareitemServer.Service.TagService;
 import com.jinoh.rareitemServer.domain.ClothingItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
