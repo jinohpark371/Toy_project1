@@ -26,7 +26,8 @@ public class ClothingItemService implements ItemService<ClothingItem>{
 
     @Override
     public ClothingItem getItem(Long id) {
-        return repository.findById(id).orElseThrow();
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("해당 의류아이템을 찾지 못함 ID:" + id));
     }
 
     @Override
@@ -34,6 +35,12 @@ public class ClothingItemService implements ItemService<ClothingItem>{
     public ClothingItem voteItem(Long id) {
         ClothingItem item = repository.findById(id).orElseThrow();
         item.setRarityPercent(item.getRarityPercent() + 1); // 희소성 +1
+        return item;
+    }
+
+    public ClothingItem deleteItem(Long id) {
+        ClothingItem item = getItem(id);
+        repository.delete(item);
         return item;
     }
 }
