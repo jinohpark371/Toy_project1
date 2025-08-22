@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Card from "./components/Card/Card";
+import Sidebar from "./components/SideBar";
 import { ITEMS } from "./api/items";
 
 const Page = styled.main`
@@ -22,6 +23,12 @@ const Header = styled.header`
   }
 `;
 
+// 사이드바 + 그리드 묶는 컨테이너
+const Content = styled.section`
+  display: flex;
+  gap: 24px;
+`;
+
 const Grid = styled.section`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -35,12 +42,16 @@ export default function App() {
         <h1>희귀템 레이더</h1>
         <span>{ITEMS.length} items</span>
       </Header>
-
+      <Content>
+        <Sidebar onFilterChange={() => {}} 
+          onSortChange={() =>{}}
+        ></Sidebar>
       <Grid>
         {ITEMS.map((it) => (
           <Card key={it.id} item={it} />
         ))}
       </Grid>
+      </Content>
     </Page>
   );
 }
