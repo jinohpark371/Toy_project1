@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import Card from "./components/Card/Card";
 import Sidebar from "./components/SideBar";
-import { ITEMS } from "./api/items";
+import { TRIPS } from "./api/trips.ts";
 
 const Page = styled.main`
   max-width: 1280px;
@@ -27,27 +27,30 @@ const Header = styled.header`
 const Content = styled.section`
   display: flex;
   gap: 24px;
+  height: 1200px;
 `;
 
 const Grid = styled.section`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(3, 1fr); /* 4열 고정 */
+  grid-template-rows: repeat(4, 1fr);    /* 3행 고정 */
   gap: 16px;
+  height: fit-content; 
 `;
 
 export default function App() {
   return (
     <Page>
       <Header>
-        <h1>희귀템 레이더</h1>
-        <span>{ITEMS.length} items</span>
+        <h1>Triplan</h1>
+        <span>{TRIPS.length} trips</span>
       </Header>
       <Content>
         <Sidebar onFilterChange={() => {}} 
           onSortChange={() =>{}}
         ></Sidebar>
       <Grid>
-        {ITEMS.map((it) => (
+        {TRIPS.map((it) => (
           <Card key={it.id} item={it} />
         ))}
       </Grid>
