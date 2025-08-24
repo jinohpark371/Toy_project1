@@ -1,59 +1,116 @@
-import * as S from "./SideBar.style";
+// components/Sidebar/Sidebar.tsx
+import { useState } from "react";
+import styled from "styled-components";
+import type { FilterOptions, SortOptions } from "../types/sidebar";
 
-type FilterProps = {
-  onFilterChange: (filters: {
-    search: string;
-    minPrice: number;
-    maxPrice: number;
-    category: string;
-  }) => void;
-  onSortChange: (sort: string) => void;
+type SidebarProps = {
+  onFilterChange: (filters: FilterOptions) => void;
+  onSortChange: (sort: SortOptions) => void;
+  summary: {
+    totalTrips: number;
+    totalBudget: number;
+    totalSpent: number;
+    avgSpent: number;
+    avgSchedules: number;
+  };
 };
 
-export default function Sidebar({ onFilterChange, onSortChange }: FilterProps) {
+export default function Sidebar({ onFilterChange, onSortChange, summary }: SidebarProps) {
+  const [filters, setFilters] = useState<FilterOptions>({});
+
+  const handleFilter = (key: keyof FilterOptions, value: any) => {
+    const newFilters = { ...filters, [key]: value };
+    setFilters(newFilters);
+    onFilterChange(newFilters);
+  };
+
   return (
-    <S.Wrapper>
-      <S.Section>
-        <S.Label>검색</S.Label>
-        <S.Input type="text" placeholder="상품명 검색" />
-      </S.Section>
+    <Aside>
+      <h3>필터링</h3>
+      <Section>
+        <Label>여행 기간</Label>
+        <button onClick={() => handleFilter("period", "upcoming")}>다가올 여행</button>
+        <button onClick={() => handleFilter("period", "past")}>지난 여행</button>
+      </Section>
 
-      <S.Section>
-        <S.Label>정렬</S.Label>
-        <S.Select onChange={(e) => onSortChange(e.target.value)}>
-          <option value="priceAsc">가격 낮은순</option>
-          <option value="priceDesc">가격 높은순</option>
-          <option value="rarityDesc">희소성 높은순</option>
-          <option value="ratingDesc">평점 높은순</option>
-        </S.Select>
-      </S.Section>
+      <Section>
+        <Label>예산</Label>
+        <button onClick={() => handleFilter("budget", "under50")}>50만원 이하</button>
+        <button onClick={() => handleFilter("budget", "over100")}>100만원 이상</button>
+      </Section>
 
-      <S.Section>
-        <S.Label>가격 범위</S.Label>
-        <S.Flex>
-          <S.Input type="number" placeholder="최소" />
-          <span> ~ </span>
-          <S.Input type="number" placeholder="최대" />
-        </S.Flex>
-      </S.Section>
+      <Section>
+        <Label>카테고리</Label>
+        {["식비", "교통", "숙박", "관광"].map((c) => (
+          <button key={c} onClick={() => handleFilter("category", c as any)}>{c}</button>
+        ))}
+      </Section>
 
-      <S.Section>
-        <S.Label>카테고리</S.Label>
-        <S.Select>
-          <option value="">전체</option>
-          <option value="outer">아우터</option>
-          <option value="shirt">셔츠</option>
-          <option value="pants">팬츠</option>
-        </S.Select>
-      </S.Section>
+      <Section>
+        <Label>참여자</Label>
+        {["혼자", "가족", "친구", "회사"].map((p) => (
+          <button key={p} onClick={() => handleFilter("participants", p as any)}>{p}</button>
+        ))}
+      </Section>
 
-      <S.Button
-        onClick={() =>
-          onFilterChange({ search: "", minPrice: 0, maxPrice: 200000, category: "" })
-        }
-      >
-        적용하기
-      </S.Button>
-    </S.Wrapper>
+      <h3>정렬</h3>
+      <Section>
+        <button onClick={() => onSortChange("budget-desc")}>예산 높은 순</button>
+        <button onClick={() => onSortChange("budget-asc")}>예산 낮은 순</button>
+        <button onClick={() => onSortChange("spent-desc")}>사용 금액 많은 순</button>
+        <button onClick={() => onSortChange("spent-asc")}>사용 금액 적은 순</button>
+        <button onClick={() => onSortChange("date-near")}>가까운 여행</button>
+        <button onClick={() => onSortChange("date-far")}>먼 여행</button>
+        <button onClick={() => onSortChange("title")}>제목 가나다순</button>
+      </Section>
+
+      <h3>통계 요약</h3>
+      <SummaryBox>
+        <p>여행 총 {summary.totalTrips}건</p>
+        <p>총 예산: ₩{summary.totalBudget.toLocaleString()}</p>
+        <p>총 지출: ₩{summary.totalSpent.toLocaleString()}</p>
+        <p>평균 지출: ₩{summary.avgSpent.toLocaleString()}</p>
+        <p>평균 일정 수: {summary.avgSchedules}</p>
+      </SummaryBox>
+    </Aside>
   );
 }
+
+const Aside = styled.aside`
+  background: #fafafa;
+  border: 1px solid #e5e7eb;
+  padding: 16px;
+  border-radius: 12px;
+`;
+
+const Section = styled.div`
+  margin-bottom: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  button {
+    font-size: 12px;
+    padding: 4px 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    &:hover {
+      background: #f3f4f6;
+    }
+  }
+`;
+
+const Label = styled.div`
+  font-size: 13px;
+  font-weight: bold;
+  margin-bottom: 4px;
+  width: 100%;
+`;
+
+const SummaryBox = styled.div`
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.6;
+`;

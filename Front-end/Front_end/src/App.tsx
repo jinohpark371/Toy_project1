@@ -46,9 +46,32 @@ export default function App() {
         <span>{TRIPS.length} trips</span>
       </Header>
       <Content>
-        <Sidebar onFilterChange={() => {}} 
-          onSortChange={() =>{}}
-        ></Sidebar>
+       <Sidebar
+  onFilterChange={(filters) => {
+    console.log("필터 적용:", filters);
+  }}
+  onSortChange={(sortKey) => {
+    console.log("정렬 적용:", sortKey);
+  }}
+  summary={{
+    totalTrips: TRIPS.length,
+    totalBudget: TRIPS.reduce((sum, t) => sum + t.totalBudget, 0),
+    totalSpent: TRIPS.reduce(
+      (sum, t) => sum + t.expenses.reduce((s, e) => s + e.amount, 0),
+      0
+    ),
+    avgSpent: Math.round(
+      TRIPS.reduce(
+        (sum, t) => sum + t.expenses.reduce((s, e) => s + e.amount, 0),
+        0
+      ) / (TRIPS.length || 1)
+    ),
+    avgSchedules: Math.round(
+      TRIPS.reduce((sum, t) => sum + (t.schedules?.length ?? 0), 0) /
+        (TRIPS.length || 1)
+    ),
+  }}
+/>
       <Grid>
         {TRIPS.map((it) => (
           <Card key={it.id} item={it} />
