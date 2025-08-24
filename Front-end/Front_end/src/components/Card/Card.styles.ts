@@ -2,16 +2,31 @@ import styled from "styled-components";
 
 export const CardBox = styled.article`
   background: var(--panel);
-  border-radius: 16px;
   overflow: hidden;
-  border: 1px solid #1f2230;
   transition: transform .08s ease;
   &:hover { transform: translateY(-2px); }
+  height: fit-content;
+  border-radius: 50px;
+ background: #f5f5f5;
+ position: relative;
+ border: 2px solid #c3c6ce;
+ transition: 0.5s ease-out;
+
+  &:hover {
+    border-color: #008bf8;
+    box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  &:hover .card-button {
+    transform: translate(-50%, 50%);
+    opacity: 1;
+  }
 `;
 
 export const Thumb = styled.div`
   position: relative; aspect-ratio: 3 / 2; overflow:hidden;
-  img { width:100%; height:100%; object-fit:cover; display:block; }
+  img { width:120%; height:120%; object-fit:cover; display:block; }
+
 `;
 export const Badge = styled.span`
   position: absolute; top: 10px; left: 10px;
@@ -30,7 +45,7 @@ export const Mini = styled.span<{color:string}>`
 `;
 export const Rating = styled.span` font-size:12px; color:#fde68a; `;
 export const TagLine = styled.div` margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; `;
-export const Chip = styled.span` font-size:11px; background:#1e2030; padding:4px 8px; border-radius:10px; `;
+export const Chip = styled.span` font-size:11px; background: #e0f2ff; padding:4px 8px; border-radius:10px; color: #0369a1;`;
 export const RarityWrapper = styled.div`
   margin-top: 10px;
 `;
