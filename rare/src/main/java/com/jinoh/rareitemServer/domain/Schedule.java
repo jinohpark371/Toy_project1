@@ -2,6 +2,7 @@ package com.jinoh.rareitemServer.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -35,4 +36,17 @@ public class Schedule {
     @JoinColumn(name = "trip_id", nullable = false)
     @JsonBackReference // 순환참조 방지: Trip 쪽 @JsonManagedReference와 매칭
     private Trip trip;
+
+    @Column(nullable = false)
+    @OneToOne(mappedBy = "schedule", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference("schedule-expense")
+    private Expense expense;
+
+    public void setExpense(Expense e) {
+        if (this.expense != null) this.expense.setSchedule(null);
+        this.expense = e;
+        if (e != null) e.setSchedule(this);
+    }
+
 }
